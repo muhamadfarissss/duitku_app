@@ -67,29 +67,23 @@ Panduan cepat untuk menjalankan proyek **Duitku** di perangkat lokal setelah And
 Jalankan perintah-perintah berikut secara berurutan di terminal VS Code Anda:
 
 ### 1. Install Dependency
-```bash
 composer install
 npm install
 2. Setup Environment (.env)
 Salin file konfigurasi environment:
 
-Bash
 cp .env.example .env
 Penting: Buka file .env baru tersebut, lalu pastikan nama database sesuai dengan MySQL lokal Anda:
 DB_DATABASE=db_duitku
 
 3. Generate Key & Kirim Tabel ke MySQL
-Bash
 php artisan key:generate
 php artisan migrate
 4. Jalankan Aplikasi (Buka 2 Terminal)
 Terminal 1 (Backend Server):
 
-Bash
 php artisan serve
 Buka browser di: http://localhost:8000
 
 Terminal 2 (Frontend Assets Compiler):
-
-Bash
 npm run dev
