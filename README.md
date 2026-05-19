@@ -65,8 +65,9 @@ Panduan cepat untuk menjalankan proyek **Duitku** di perangkat lokal setelah And
 ## 💻 Cara Menjalankan Proyek (Quick Start)
 
 Jalankan perintah-perintah berikut secara berurutan di terminal VS Code Anda:
-
+```bash
 ### 1. Install Dependency
+
 composer install
 npm install
 2. Setup Environment (.env)
