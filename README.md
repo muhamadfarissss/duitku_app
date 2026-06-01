@@ -80,6 +80,23 @@ DB_DATABASE=db_duitku
 3. Generate Key & Kirim Tabel ke MySQL
 php artisan key:generate
 php artisan migrate
+
+4. Setup SSL (PENTING!)
+Karena kita menggunakan API eksternal (Google Gemini), komputer kalian wajib mengenali sertifikat SSL agar tidak error cURL 60.
+
+Download file cacert.pem dari curl.se/ca/cacert.pem.
+
+Simpan di folder PHP kalian (misalnya di C:\php84\ atau C:\xampp\php\).
+
+Buka php.ini kalian, cari curl.cainfo dan openssl.cafile.
+
+Arahkan ke file tersebut:
+
+Ini, TOML
+curl.cainfo = "C:/path/ke/folder/php/cacert.pem"
+openssl.cafile = "C:/path/ke/folder/php/cacert.pem"
+Restart terminal kalian setelah mengubah php.ini.
+
 4. Jalankan Aplikasi (Buka 2 Terminal)
 Terminal 1 (Backend Server):
 
