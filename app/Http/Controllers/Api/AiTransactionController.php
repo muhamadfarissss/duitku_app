@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Models\Transaction; // Tambahkan ini di bagian atas
+use App\Models\Transaction;
+use App\Models\Category; // Tambahkan ini
+use Illuminate\Support\Facades\Auth; // Tambahkan ini
 
 class AiTransactionController extends Controller
 {
@@ -13,19 +16,28 @@ class AiTransactionController extends Controller
         $request->validate(['text' => 'required|string']);
         $userInput = $request->input('text');
 
-        $systemPrompt = "Kamu adalah asisten pencatat keuangan cerdas. Tugasmu mengekstrak kalimat user ke dalam format JSON.
+        // 1. Ambil semua kategori user yang login agar AI hanya pilih dari sini
+        $userCategories = Category::where('user_id', Auth::id())
+            ->pluck('name')
+            ->toArray();
+            
+        $categoryList = implode(", ", $userCategories);
+
+        // 2. Prompt Engineering: Membatasi AI hanya pada kategori yang ada
+        $systemPrompt = "Kamu adalah asisten keuangan cerdas. Tugasmu mengekstrak kalimat user ke dalam format JSON.
         Aturan baku:
         1. Kembalikan HANYA format JSON.
-        2. Key JSON: 'tipe', 'nominal' (integer), 'kategori', 'catatan'.
+        2. Key JSON: 'tipe' (pemasukan/pengeluaran), 'nominal' (integer), 'kategori', 'catatan'.
+        3. Gunakan kategori HANYA dari daftar berikut: [{$categoryList}]. Jika tidak cocok, pilih yang paling mendekati.
+        
         Kalimat User: '" . $userInput . "'";
 
-        // 3. Tembak ke API Gemini dengan mekanisme RETRY
         $apiKey = env('GEMINI_API_KEY');
         
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])
-        ->retry(3, 200) // <--- Tambahkan baris ini! (Coba 3x, jeda 200ms)
+        ->retry(3, 200)
         ->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={$apiKey}", [
             'contents' => [
                 ['parts' => [['text' => $systemPrompt]]]
@@ -37,14 +49,14 @@ class AiTransactionController extends Controller
             $cleanJson = str_replace(['```json', '```'], '', trim($aiResult));
             $decodedJson = json_decode($cleanJson, true);
 
-            // Tambahkan pengecekan ini:
             if (!$decodedJson) {
                 return response()->json(['status' => 'error', 'message' => 'Format AI tidak valid.'], 422);
             }
 
-            // Simpan ke Database
+            // 3. Simpan ke Database dengan user_id yang aktif
             $transaction = Transaction::create([
-                'type'     => $decodedJson['tipe'] ?? 'pengeluaran', // Default jika tidak ada
+                'user_id'  => Auth::id(), 
+                'type'     => $decodedJson['tipe'] ?? 'pengeluaran',
                 'amount'   => $decodedJson['nominal'] ?? 0,
                 'category' => $decodedJson['kategori'] ?? 'Lainnya',
                 'notes'    => $decodedJson['catatan'] ?? '-',
