@@ -58,50 +58,43 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT). -->
 # Duitku - Setup Guide
 
-Panduan cepat untuk menjalankan proyek **Duitku** di perangkat lokal setelah Anda melakukan `git pull` atau `git clone`.
-
----
-
-## 💻 Cara Menjalankan Proyek (Quick Start)
-
-Jalankan perintah-perintah berikut secara berurutan di terminal VS Code Anda:
-```bash
 ### 1. Install Dependency
-
+Buka terminal di folder proyek, lalu jalankan:
 composer install
 npm install
-2. Setup Environment (.env)
+
+### 2. Setup Environment (.env)
 Salin file konfigurasi environment:
-
 cp .env.example .env
-Penting: Buka file .env baru tersebut, lalu pastikan nama database sesuai dengan MySQL lokal Anda:
-DB_DATABASE=db_duitku
 
-3. Generate Key & Kirim Tabel ke MySQL
+Buka file `.env` baru tersebut menggunakan VS Code, lalu sesuaikan konfigurasi berikut:
+1. Pastikan nama database sesuai dengan MySQL lokal Anda (Buat dulu database kosong bernama `db_duitku` di phpMyAdmin/MySQL Workbench):
+   DB_DATABASE=db_duitku
+
+2. Masukkan API Key Google Gemini kalian di bagian paling bawah file:
+   GEMINI_API_KEY=isi_dengan_api_key_gemini_kalian
+
+### 3. Generate Key & Kirim Tabel ke MySQL
 php artisan key:generate
-php artisan migrate
+php artisan migrate --seed
 
-4. Setup SSL (PENTING!)
-Karena kita menggunakan API eksternal (Google Gemini), komputer kalian wajib mengenali sertifikat SSL agar tidak error cURL 60.
+### 4. Setup SSL (PENTING untuk Windows!)
+Karena aplikasi ini menggunakan API eksternal (Google Gemini), komputer kalian wajib mengenali sertifikat SSL agar tidak terkena eror `cURL error 60`.
 
-Download file cacert.pem dari curl.se/ca/cacert.pem.
+1. Download file `cacert.pem` melalui link resmi: https://curl.se/ca/cacert.pem
+2. Simpan file tersebut di dalam folder PHP kalian (misalnya di `C:\xampp\php\cacert.pem` atau `C:\php\cacert.pem`).
+3. Buka file `php.ini` kalian, cari baris `curl.cainfo` dan `openssl.cafile` (hapus tanda titik koma `;` di depannya jika ada).
+4. Arahkan jalurnya ke file yang baru di-download tadi:
+   curl.cainfo = "C:/xampp/php/cacert.pem"
+   openssl.cafile = "C:/xampp/php/cacert.pem"
+5. Save file `php.ini`, lalu restart terminal/XAMPP kalian.
 
-Simpan di folder PHP kalian (misalnya di C:\php84\ atau C:\xampp\php\).
+### 5. Jalankan Aplikasi (Buka 2 Terminal terpisah)
+*Gunakan terminal **Git Bash** agar tidak terkena hambatan restriction script Windows.*
 
-Buka php.ini kalian, cari curl.cainfo dan openssl.cafile.
-
-Arahkan ke file tersebut:
-
-Ini, TOML
-curl.cainfo = "C:/path/ke/folder/php/cacert.pem"
-openssl.cafile = "C:/path/ke/folder/php/cacert.pem"
-Restart terminal kalian setelah mengubah php.ini.
-
-4. Jalankan Aplikasi (Buka 2 Terminal)
 Terminal 1 (Backend Server):
-
 php artisan serve
-Buka browser di: http://localhost:8000
+-> Akses aplikasi di browser melalui: http://localhost:8000
 
 Terminal 2 (Frontend Assets Compiler):
 npm run dev
