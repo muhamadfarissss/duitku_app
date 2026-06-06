@@ -7,17 +7,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// KELOMPOK ROUTE UNTUK HALAMAN YANG BUTUH LOGIN (AUTH)
-Route::middleware(['auth', 'verified'])->group(function () {
-    
-    // Halaman Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard'); // Memanggil file resources/views/dashboard.blade.php
-    })->name('dashboard');
+// Dashboard preview tanpa login
+Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
-});
+// Halaman Transaksi
+Route::get('/transaction', function () {return view('transaction');})->name('transaction');
 
-// Kelompok Profil Bawaan Breeze
+// Kelompok Profil Bawaan Breeze tetap butuh login
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
