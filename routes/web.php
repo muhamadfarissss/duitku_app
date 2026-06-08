@@ -11,9 +11,7 @@ use App\Http\Controllers\Api\AiTransactionController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 // KELOMPOK RUTE YANG WAJIB LOGIN
 Route::middleware(['auth', 'verified'])->group(function () {
