@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 01 Jun 2026 pada 12.03
+-- Waktu pembuatan: 08 Jun 2026 pada 15.51
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -35,6 +35,14 @@ CREATE TABLE `budgets` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `budgets`
+--
+
+INSERT INTO `budgets` (`id`, `user_id`, `category_id`, `nominal_limit`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 100000.00, '2026-06-08 03:26:54', '2026-06-08 03:26:54'),
+(2, 1, 2, 100000.00, '2026-06-08 03:28:41', '2026-06-08 03:28:41');
 
 -- --------------------------------------------------------
 
@@ -70,9 +78,21 @@ CREATE TABLE `categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
+  `icon` varchar(255) DEFAULT '?',
+  `type` varchar(255) DEFAULT 'Pengeluaran',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `categories`
+--
+
+INSERT INTO `categories` (`id`, `user_id`, `name`, `icon`, `type`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Servis', '🛵', 'Pengeluaran', '2026-06-08 03:26:54', '2026-06-08 03:26:54'),
+(2, 1, 'Bensin', '⛽', 'Pengeluaran', '2026-06-08 03:28:41', '2026-06-08 03:28:41'),
+(3, 1, 'Belanja', '🛒', 'Pemasukan', '2026-06-08 05:03:16', '2026-06-08 05:03:16'),
+(4, 1, 'Uang Saku', '🎁', 'Pemasukan', '2026-06-08 06:49:21', '2026-06-08 06:49:21');
 
 -- --------------------------------------------------------
 
@@ -197,6 +217,13 @@ CREATE TABLE `sessions` (
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data untuk tabel `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('D4mcnswaRFdgeADkGgmICXtDVuSD4ADNSfe03LcT', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0', 'eyJfdG9rZW4iOiJRdDN5MkVFc0xldVFTZHZUSWNEekpFWDhGeWRQVmkxaWlwVWI2dmZ6IiwiX2ZsYXNoIjp7Im9sZCI6W10sIm5ldyI6W119LCJ1cmwiOltdLCJfcHJldmlvdXMiOnsidXJsIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjgwMDBcL3RyYW5zYWN0aW9uIiwicm91dGUiOiJ0cmFuc2FjdGlvbiJ9LCJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI6MX0=', 1780926604);
+
 -- --------------------------------------------------------
 
 --
@@ -214,6 +241,15 @@ CREATE TABLE `transactions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data untuk tabel `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `user_id`, `type`, `amount`, `category`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 1, 'pemasukan', 10000.00, 'Servis', 'uang untuk servis', '2026-06-08 03:31:35', '2026-06-08 03:31:35'),
+(2, 1, 'pengeluaran', 10000.00, 'Servis', 'servis motor', '2026-06-08 05:06:23', '2026-06-08 05:06:23'),
+(3, 1, 'pemasukan', 1000000.00, 'Uang Saku', 'Uang Saku 1 Bulan', '2026-06-08 06:49:51', '2026-06-08 06:49:51');
+
 -- --------------------------------------------------------
 
 --
@@ -230,6 +266,13 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'faris', 'faris@gmail.com', NULL, '$2y$12$yZ50X5Fn3fVdDHGguR0GOOWmsiMLI5yLxxRvaDL6XejroSFKSmMR.', NULL, '2026-06-08 03:26:40', '2026-06-08 03:26:40');
 
 --
 -- Indexes for dumped tables
@@ -336,13 +379,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `budgets`
 --
 ALTER TABLE `budgets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `failed_jobs`
@@ -372,13 +415,13 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
