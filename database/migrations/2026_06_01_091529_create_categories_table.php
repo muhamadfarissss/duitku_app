@@ -15,6 +15,8 @@ return new class extends Migration
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->string('name'); // Contoh: "Makanan", "Jajan"
+        $table->string('icon')->nullable()->default('🍔');
+        $table->string('type')->nullable()->default('Pengeluaran');
         $table->timestamps();
     });
 }

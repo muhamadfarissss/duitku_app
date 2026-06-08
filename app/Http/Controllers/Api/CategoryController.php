@@ -20,11 +20,19 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string',
+            'type' => 'nullable|string' 
+        ]);
 
         $category = Category::create([
             'user_id' => Auth::id(),
-            'name' => $request->name
+            'name'    => $request->name,
+            'icon'    => $request->icon ?? '🍔',
+            
+            // GARIS MIRINGNYA SUDAH SAYA HAPUS DI BAWAH INI:
+            'type'    => $request->type ?? 'Pengeluaran', 
         ]);
 
         return response()->json(['status' => 'success', 'data' => $category], 201);
