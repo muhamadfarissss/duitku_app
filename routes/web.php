@@ -22,6 +22,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
     Route::get('/transaction', function () { return view('transaction'); })->name('transaction');
     Route::get('/category', function () { return view('category'); })->name('category');
+    Route::get('/ai-input', function () { return view('ai-input'); })->name('ai.input');
+    Route::get('/ai-insight', function () { return view('ai-insight'); })->name('ai.insight');
 
     // ==========================================
     // B. RUTE AJAX / JAVASCRIPT (Jalur Data)
